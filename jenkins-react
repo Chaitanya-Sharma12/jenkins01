@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone React App') {
+            steps {
+                git 'https://github.com/amodhjaiswal/node.git'
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Deploy React App') {
+            steps {
+               sh 'rsync -avz -e "ssh -i /home/jenkins/.ssh/id_rsa " /var/lib/jenkins/workspace/node/build  ubuntu@3.108.218.196:/var/www/html'
+            }
+        }
+    }
+}
